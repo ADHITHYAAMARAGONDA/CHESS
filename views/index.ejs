@@ -35,6 +35,12 @@
             1px 1px 0 #000; */
       }
 
+      /* White pawns: keep emoji glyph shape, recolor using CSS filters only */
+      .piece.white.pawn {
+        /* adjust tint to a clearer purple */
+        filter: hue-rotate(300deg) saturate(180%) brightness(110%);
+      }
+
       /* Only white-side pawns: override color to purple (keep shapes same) */
       .piece.white.pawn {
         color: #8b5cf6 !important; /* violet-500 */

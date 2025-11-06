@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+      /* Chessboard grid and sizing */
+      .chessboard {
+        display: grid;
+        grid-template-columns: repeat(8, 1fr);
+        grid-template-rows: repeat(8, 1fr);
+        /* use aspect-ratio and let utility classes (w-96/h-96) control size
+           prevents conflicts between inline CSS and Tailwind classes */
+        aspect-ratio: 1 / 1;
+        background: transparent; /* let individual squares paint themselves */
+        gap: 0;
+        /* prevent browser from selecting text while dragging pieces */
+        user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+      }
+
+      /* Pieces colors */
+      .piece.white {
+        color: white;
+        /* remove blur-style filter and use crisp outline via text-shadow
+           so white glyphs render sharply on light yellow squares */
+        filter: drop-shadow(0 0 2px rgba(0, 0, 0, 1));
+        /* -webkit-font-smoothing: antialiased; */
+        /* text-rendering: optimizeLegibility; */
+        /* text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000,
+            1px 1px 0 #000; */
+      }
+
+      /* Only white-side pawns: override color to purple (keep shapes same) */
+      .piece.white.pawn {
+        color: #8b5cf6 !important; /* violet-500 */
+      }
+
+      /* (reverted) No special color for white pawns */
+
+      .piece.black {
+        color: black;
+      }
+
+      .flipped {
+        transform: rotate(180deg);
+      }
+
+      /* Each square fills its grid cell */
+      .square {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+        box-sizing: border-box;
+        /* allow grid cells to shrink without being forced wider by content */
+        min-width: 0;
+        min-height: 0;
+        overflow: hidden;
+        user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+      }
+
+      .square.light {
+        background-color: #fff8c4;
+      }
+
+      .square.dark {
+        background-color: #ffd54f;
+      }
+
+      .piece {
+        font-size: 36px;
+        cursor: pointer;
+        user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+      }
+
+      .piece.draggable {
+        cursor: grab;
+      }
+
+      .dragging {
+        opacity: 0.5;
+      }
+
+      /* Rotate pieces for black player */
+      .flipped .piece {
+        transform: rotate(180deg);
+      }
+    </style>
+  </head>
+  <body>
+    <h1 class="text-center mb-2 bg-zinc-300">CHESS BOARD GAME</h1>
+    <div class="w-full flex items-center justify-center mt-2 gap-3">
+      <button
+        id="newGameBtn"
+        class="px-3 py-1 rounded bg-emerald-600 text-white hover:bg-emerald-700"
+      >
+        New Game
+      </button>
+      <div
+        id="gameStatus"
+        class="px-3 py-1 rounded bg-indigo-600 text-white hidden"
+      ></div>
+    </div>
+    <div class="w-full h-screen flex items-center justify-center bg-zinc-900">
+      <div class="relative inline-block">
+        <div class="chessboard w-96 h-96 bg-yellow-400"></div>
+        <!-- Turn indicators -->
+        <div
+          id="blackTurn"
+          class="absolute -left-28 top-0 text-green-500 font-bold hidden"
+        >
+          BLACK TURN
+        </div>
+        <div
+          id="whiteTurn"
+          class="absolute -right-28 bottom-0 text-green-500 font-bold hidden"
+        >
+          WHITE TURN
+        </div>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.socket.io/4.8.1/socket.io.min.js"
+      integrity="sha384-mkQ3/7FUtcGyoppY6bz/PORYoGqOl7/aSUMn2ymDOJcapfS6PHqxhRTMh1RR0Q6+"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/chess.js/0.10.3/chess.min.js"
+      integrity="sha512-xRllwz2gdZciIB+AkEbeq+gVhX8VB8XsfqeFbUh+SzHlN96dEduwtTuVuc2u9EROlmW9+yhRlxjif66ORpsgVA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script src="/js/chessgame.js?v=2"></script>
+  </body>
+</html>
